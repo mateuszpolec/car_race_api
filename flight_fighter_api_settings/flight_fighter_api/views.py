@@ -7,8 +7,8 @@ from rest_framework.views import APIView
 import time
 
 # Project imports
-from .serializers import PlayerSerializer, AuthPlayerSerializer
-from .models import Game, Player, AuthPlayer
+from .serializers import PlayerSerializer
+from .models import Game, Player
 from .security import make_hash_sha384
 
 class AuthPlayerView(APIView):
@@ -23,15 +23,14 @@ class AuthPlayerView(APIView):
                 game.players += 1
                 game.save()
                 data = {"status": 200, "token": token_hash}
-                AuthPlayer.objects.create(token = token_hash)
+                Player.objects.create(token = token_hash, x_position = 1, y_position = 1)
         else:
             Game.objects.create(uid = 1, is_active = True, players = 1)
             game = Game.objects.all().last()
             token = {"timestamp": int(time.time()), "game_uid": game.uid, "game_player": game.players}
             token_hash = make_hash_sha384(token)
             data = {"status": 200, "token": token_hash}
-            AuthPlayer.objects.all().delete()
-            AuthPlayer.objects.create(token = token_hash)
+            Player.objects.create(token = token_hash, x_position = 1, y_position = 1)
         return Response(data)
 
 class PlayerView(APIView):
@@ -40,9 +39,15 @@ class PlayerView(APIView):
         serializer = PlayerSerializer(qs, many = True)
         return Response(serializer.data)
 
-    def post(self, request, *args, **kwargs):
+
+    def patch(self, request, *args, **kwargs):
         serializer = PlayerSerializer(data = request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Respone(serializer.data)
+            token = serializer.data['token']
+            player = Player.objects.filter(token = token).last()
+            player.x_position = serializer.data['x_position']
+            player.y_position = serializer.data['y_position']
+            player.save()
+            return Response(serializer.data)
+        print(serializer.data)
         return Response(serializer.errors)
