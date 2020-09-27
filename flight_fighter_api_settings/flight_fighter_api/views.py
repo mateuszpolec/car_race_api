@@ -11,11 +11,10 @@ from .serializers import PlayerSerializer, AuthPlayerSerializer
 from .models import Game, Player, AuthPlayer
 from .security import make_hash_sha384
 
-class AuthPlayer(APIView):
+class AuthPlayerView(APIView):
     def get(self, request, *args, **kwargs):
         game = Game.objects.all().last()
         if(game):
-            print("GAME FOUND")
             if(game.players > 64):
                 data = {"status": 400, "token": "", "error": "Too many players on server!"}
             else:
@@ -24,12 +23,15 @@ class AuthPlayer(APIView):
                 game.players += 1
                 game.save()
                 data = {"status": 200, "token": token_hash}
+                AuthPlayer.objects.create(token = token_hash)
         else:
             Game.objects.create(uid = 1, is_active = True, players = 1)
             game = Game.objects.all().last()
             token = {"timestamp": int(time.time()), "game_uid": game.uid, "game_player": game.players}
             token_hash = make_hash_sha384(token)
             data = {"status": 200, "token": token_hash}
+            AuthPlayer.objects.all().delete()
+            AuthPlayer.objects.create(token = token_hash)
         return Response(data)
 
 class PlayerView(APIView):
