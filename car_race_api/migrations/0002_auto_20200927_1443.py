@@ -7,7 +7,7 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('flight_fighter_api', '0001_initial'),
+        ('car_race_api', '0001_initial'),
     ]
 
     operations = [
