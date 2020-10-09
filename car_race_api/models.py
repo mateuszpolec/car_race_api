@@ -16,8 +16,8 @@ class Game(models.Model):
 
 class Player(models.Model):
     token = models.CharField(max_length = 96, default = "", null = True)
-    x_position = models.IntegerField(null = True)
-    y_position = models.IntegerField(null = True)
+    x_position = models.FloatField(null = True)
+    y_position = models.FloatField(null = True)
 
     def __str__(self):
         return f"Token {self.token} x pos: {self.x_position}, y pos: {self.y_position}"
