@@ -16,8 +16,8 @@ class Game(models.Model):
 
 class Player(models.Model):
     token = models.CharField(max_length = 96, default = "", null = True)
-    x_position = models.FloatField(null = True)
-    y_position = models.FloatField(null = True)
+    time_map1 = models.FloatField(null = True)
+    time_map2 = models.FloatField(null = True)
 
     def __str__(self):
-        return f"Token {self.token} x pos: {self.x_position}, y pos: {self.y_position}"
+        return f"Token {self.token} x pos: {self.time_map1}, y pos: {self.time_map2}"

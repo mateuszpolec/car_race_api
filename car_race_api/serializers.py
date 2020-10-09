@@ -9,5 +9,5 @@ class PlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
         fields = (
-            'token', 'x_position', 'y_position'
+            'token', 'time_map1', 'time_map2'
         )

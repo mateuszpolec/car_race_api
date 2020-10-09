@@ -15,9 +15,6 @@ class AuthPlayerView(APIView):
     def get(self, request, *args, **kwargs):
         game = Game.objects.all().last()
         if(game):
-            if(game.players > 64):
-                data = {"status": 400, "token": "", "error": "Too many players on server!"}
-            else:
                 token = {"timestamp": int(time.time()), "game_uid": game.uid, "game_player": game.players+1}
                 token_hash = make_hash_sha384(token)
                 game.players += 1
@@ -45,8 +42,8 @@ class PlayerView(APIView):
         if serializer.is_valid():
             token = serializer.data['token']
             player = Player.objects.filter(token = token).last()
-            player.x_position = serializer.data['x_position']
-            player.y_position = serializer.data['y_position']
+            player.time_map1 = serializer.data['time_map1']
+            player.time_map2 = serializer.data['time_map2']
             player.save()
             return Response(serializer.data)
         print(serializer.data)

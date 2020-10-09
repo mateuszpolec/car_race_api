@@ -8,4 +8,4 @@ class GameAdmin(admin.ModelAdmin):
 
 @admin.register(Player)
 class PlayerAdmin(admin.ModelAdmin):
-    list_display = ('token', 'x_position', 'y_position')
+    list_display = ('token', 'time_map1', 'time_map2')
