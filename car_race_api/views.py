@@ -40,7 +40,7 @@ class PlayerView(APIView):
         return Response(serializer.data)
 
 
-    def patch(self, request, *args, **kwargs):
+    def put(self, request, *args, **kwargs):
         serializer = PlayerSerializer(data = request.data)
         if serializer.is_valid():
             token = serializer.data['token']
